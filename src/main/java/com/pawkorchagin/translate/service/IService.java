@@ -8,5 +8,5 @@ import com.pawkorchagin.translate.model.request.YandexApiRequest;
  * IService
  */
 public interface IService {
-    public ResponseEntity<?> doJob(YandexApiRequest request);
+    public ResponseEntity<?> doJob(YandexApiRequest request, String ip);
 }

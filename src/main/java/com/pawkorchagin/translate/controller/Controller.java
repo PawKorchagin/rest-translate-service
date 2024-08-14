@@ -28,8 +28,9 @@ public class Controller {
 
     @PostMapping("/translate")
     public ResponseEntity<?> translate(@RequestBody YandexApiRequest request, HttpServletRequest servletRequest) {
-        log.debug(servletRequest.getRemoteAddr());
-        return service.doJob(request);
+        var ip = servletRequest.getRemoteAddr();
+        log.debug("ip: {}", ip);
+        return service.doJob(request, ip);
     }
 
     @PostMapping("/echo")
