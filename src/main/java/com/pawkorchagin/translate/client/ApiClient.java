@@ -1,17 +1,19 @@
-package com.pawkorchagin.client;
+package com.pawkorchagin.translate.client;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.pawkorchagin.client.cfg.YandexApiConfig;
+import com.pawkorchagin.translate.client.cfg.YandexApiConfig;
 import com.pawkorchagin.translate.model.request.YandexApiRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -19,9 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class ApiClient {
+    @Autowired
     private final YandexApiConfig cfg;
-    private final RestTemplate restTemplate; // Inject this via constructor
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public ResponseEntity<?> makeRequest(YandexApiRequest request) {
         try {
@@ -40,7 +44,7 @@ public class ApiClient {
                 log.error("null http entity");
             }
 
-            ResponseEntity<Map> response = restTemplate.exchange(cfg.getURL(), HttpMethod.POST, entity, Map.class);
+            ResponseEntity<Map> response = restTemplate.exchange(cfg.getUrl(), HttpMethod.POST, entity, Map.class);
 
             return handleResponse(response);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -66,34 +70,20 @@ public class ApiClient {
             log.error("request is null on apiclient.java 66");
         }
 
-        headers.setBearerAuth(cfg.getTOKEN());
+        headers.setBearerAuth(cfg.getIamToken());
         headers.set("Content-Type", "application/json");
-
-        if (cfg.getFOLDER_ID() == null || request.texts() == null || request.sourceLanguageCode() == null || request.targetLanguageCode() == null) {
-            log.error("map takes nulls");
-        }
-
-        if (cfg.getFOLDER_ID() == null) {
-            log.error("null folder id");
-        }
-        
-        if (request.sourceLanguageCode() == null) {
-            log.error("null source lang");
-        }
-
-        if (request.targetLanguageCode() == null) {
-            log.error("null target lang");
-        }
-
-        if (request.texts() == null) {
-            log.error("null texts");
-        }
 
         log.debug("Config content: {}", cfg.toString());
 
+        String[] content = request.texts();
+
+        if (content == null) {
+            log.error("request text is null");
+        }
+
         Map<String, Object> requestBody = Map.of(
-            "folderId", cfg.getFOLDER_ID(),
-            "texts", request.texts(),
+            "folderId", cfg.getFolderId(),
+            "texts", content,
             "sourceLanguageCode", request.sourceLanguageCode(),
             "targetLanguageCode", request.targetLanguageCode()
         );

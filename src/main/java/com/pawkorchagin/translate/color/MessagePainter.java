@@ -1,9 +1,9 @@
-package com.color;
+package com.pawkorchagin.translate.color;
 
 /**
- * ColorLogger
+ * MessagePainter
  */
-public class LogPainter {
+public class MessagePainter {
     public static String purple(String msg) {
         return "\u001B[35m" + msg + "\u001B[35m";
     }

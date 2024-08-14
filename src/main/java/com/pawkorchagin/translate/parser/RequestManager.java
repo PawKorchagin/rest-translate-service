@@ -1,4 +1,4 @@
-package com.pawkorchagin.parser;
+package com.pawkorchagin.translate.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;

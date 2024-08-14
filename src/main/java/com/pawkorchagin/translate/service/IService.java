@@ -1,4 +1,4 @@
-package com.pawkorchagin.service;
+package com.pawkorchagin.translate.service;
 
 import org.springframework.http.ResponseEntity;
 
