@@ -1,6 +1,7 @@
 package com.pawkorchagin.translate.service.impl;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,8 @@ public class ServiceNonParallel implements IService {
 
         try {
             rep.addUserSession(ip);
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException | SQLException e) {
+            log.error(e.getMessage());
         }
 
         return response;

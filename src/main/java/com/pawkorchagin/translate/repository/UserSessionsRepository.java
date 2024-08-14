@@ -5,8 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,7 +31,7 @@ public class UserSessionsRepository {
     private Connection connection;
 
     private void init() throws IOException, SQLException, ClassNotFoundException {
-        if (connection.isClosed() || connection == null) {
+        if (connection == null || connection.isClosed()) {
             Class.forName(cfg.getDriverClassName());
             connection = DriverManager.getConnection(cfg.getUrl(), cfg.getUsername(), cfg.getPassword());
             this.executeInitialScript(cfg.getScriptFilePath());
@@ -48,8 +50,24 @@ public class UserSessionsRepository {
 
     public void addUserSession(String ip) throws IOException, SQLException, ClassNotFoundException {
         this.init();
-        var st = connection.prepareStatement("INSERT INTO sessions(ip) VALUES(?)");
-        st.setString(1, ip);
+        try (java.sql.PreparedStatement st = connection.prepareStatement("INSERT INTO sessions(ip) VALUES(?)")) {
+            st.setString(1, ip);
+            st.executeUpdate();
+        }
         log.info("add user session: {}", ip);
+    }
+
+    public LinkedList<String> selectAll() throws SQLException {
+        var st = connection.createStatement();
+    
+        ResultSet rs = st.executeQuery("SELECT * FROM sessions");
+
+        LinkedList<String> list = new LinkedList<>();
+
+        while (rs.next()) {
+            list.add(rs.getString("ip"));
+        }
+
+        return list;
     }
 }

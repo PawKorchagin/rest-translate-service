@@ -10,7 +10,7 @@ import lombok.Getter;
 public class RepositoryConfig {
     @Value("${spring.datasource.url}")
     private String url;
-    @Value("${spring.datasoursce.driver-class-name}")
+    @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
     @Value("${spring.datasource.script-file-path}")
     private String scriptFilePath;
