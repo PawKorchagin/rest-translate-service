@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Translation App</title>
+</head>
+<body>
+    <h1>Translate Text</h1>
+    <form th:action="@{/translate}" method="post">
+        <label for="text">Text to translate:</label>
+        <input type="text" id="text" name="text" required>
+        <br/>
+        <label for="sourceLang">Source Language:</label>
+        <input type="text" id="sourceLang" name="sourceLang" value="en" required>
+        <br/>
+        <label for="targetLang">Target Language:</label>
+        <input type="text" id="targetLang" name="targetLang" value="ru" required>
+        <br/>
+        <button type="submit">Translate</button>
+    </form>
+
+    <div th:if="${translatedText}">
+        <h2>Translated Text:</h2>
+        <p th:text="${translatedText}"></p>
+    </div>
+</body>
+</html>
