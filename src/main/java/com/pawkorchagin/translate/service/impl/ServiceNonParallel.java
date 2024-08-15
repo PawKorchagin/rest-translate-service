@@ -16,15 +16,32 @@ import com.pawkorchagin.translate.service.IService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service implementation that performs the job of handling translation requests 
+ * in a non-parallel manner. This service interacts with an API client to process 
+ * the request and a repository to log user sessions.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ServiceNonParallel implements IService {
+
     @Autowired
     private final ApiClient client;
+
     @Autowired 
     private final UserSessionsRepository rep;
 
+    /**
+     * Processes a translation request and sava the user's session info to database. This method 
+     * makes a synchronous call to an external translation API and records the user's 
+     * session in the database.
+     *
+     * @param request the request object containing the text to be translated and the target language
+     * @param ip the IP address of the user making the request
+     * @return a {@link ResponseEntity} containing the response from the translation API
+     * @throws IllegalStateException if the {@link ApiClient} or {@link UserSessionsRepository} beans are not properly injected
+     */
     @Override
     public ResponseEntity<?> doJob(YandexApiRequest request, String ip) {
         log.info("Starting non-parallel service job");
