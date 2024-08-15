@@ -19,6 +19,9 @@ import com.pawkorchagin.translate.model.request.YandexApiRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * ApiClient class responsible for making API requests to the Yandex translation service.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -27,6 +30,12 @@ public class ApiClient {
     private final YandexApiConfig cfg;
     private final RestTemplate restTemplate = new RestTemplate();
 
+    /**
+     * Makes a request to the Yandex API with the provided {@link YandexApiRequest}.
+     *
+     * @param request The {@link YandexApiRequest} object containing the request details.
+     * @return A {@link ResponseEntity} containing the API response or an error message.
+     */
     public ResponseEntity<?> makeRequest(YandexApiRequest request) {
         try {
             if (request == null) {
@@ -50,7 +59,7 @@ public class ApiClient {
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             log.error("API request failed with status: {} and body: {}", e.getStatusCode(), e.getResponseBodyAsString());
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
-        } catch (NullPointerException  e) {
+        } catch (NullPointerException e) {
             log.error("Error occurred in request service api client:\nMessage: {}\nError: {}\nStack trace: {}", e.getMessage(), e.toString(), e.getStackTrace());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("api client request error");
         }  catch (Exception e) {
@@ -59,6 +68,12 @@ public class ApiClient {
         }
     }
 
+    /**
+     * Prepares the HTTP entity with headers and request body for the API call.
+     *
+     * @param request The {@link YandexApiRequest} object containing the request details.
+     * @return An {@link HttpEntity} containing the request body and headers.
+     */
     private HttpEntity<Map<String, Object>> prepareRequestEntity(YandexApiRequest request) {
         HttpHeaders headers = new HttpHeaders();
 
@@ -95,6 +110,14 @@ public class ApiClient {
         return new HttpEntity<>(requestBody, headers);
     }
 
+    /**
+     * Handles the API response by checking its status and returning the appropriate
+     * response entity.
+     *
+     * @param response The {@link ResponseEntity} received from the API.
+     * @return A {@link ResponseEntity} with the processed API response.
+     * @throws NullPointerException if the response is null.
+     */
     private ResponseEntity<?> handleResponse(ResponseEntity<Map> response) throws NullPointerException {
         if (response == null) {
             throw new NullPointerException("null response error");
