@@ -1,5 +1,8 @@
 package com.pawkorchagin.translate.controller;
 
+import java.util.Map;
+
+import org.attoparser.config.ParseConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pawkorchagin.translate.model.request.YandexApiRequest;
 import com.pawkorchagin.translate.service.IService;
+import com.pawkorchagin.translate.util.PrettyMapUtil;
+import com.pawkorchagin.translate.parser.ParseManager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -83,9 +90,20 @@ public class Controller {
 
         // Call the translation service and get the response body
         var body = service.doJob(request, servletRequest.getRemoteAddr()).getBody();
+
+        String prettyText;
+
+        if (body instanceof String) {
+            // Treat the body as a plain string without JSON parsing
+            prettyText = ParseManager.formatText((String) body);
+        } else {
+            // If the body is neither String nor Map, set a default value
+            prettyText = "Translation failed or unknown response format.";
+        }
         
         // Add the translated text to the model for rendering in the view
-        model.addAttribute("translatedText", body != null ? body : "Failed");
+        
+        model.addAttribute("translatedText", prettyText);
         return "translate";
     }
 

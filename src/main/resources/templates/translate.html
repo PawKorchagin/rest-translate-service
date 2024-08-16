@@ -2,10 +2,99 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Translation App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin: auto;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        #translatedTextContainer {
+            display: none;
+            background: #e8f5e9;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #loadingSpinner {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <h1>Translate Text</h1>
-    <form th:action="@{/translate}" method="post">
+    <form th:action="@{/translate}" method="post" id="translateForm">
         <label for="text">Text to translate:</label>
         <input type="text" id="text" name="text" required>
         <br/>
@@ -18,9 +107,35 @@
         <button type="submit">Translate</button>
     </form>
 
-    <div th:if="${translatedText}">
-        <h2>Translated Text:</h2>
-        <p th:text="${translatedText}"></p>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Translating...</p>
     </div>
+
+    <!-- Translated Text Section -->
+    <div id="translatedTextContainer" th:if="${translatedText}">
+        <h2>Translated Text:</h2>
+        <p id="translatedText" th:text="${translatedText}"></p>
+    </div>
+
+    <script>
+        document.getElementById("translateForm").onsubmit = function() {
+            // Show the loading spinner
+            document.getElementById("loadingSpinner").style.display = "block";
+
+            // Hide the translated text container
+            document.getElementById("translatedTextContainer").style.display = "none";
+        };
+
+        // If translated text exists, show it and hide the spinner
+        window.onload = function() {
+            var translatedText = document.getElementById("translatedText").innerText;
+            if (translatedText && translatedText.trim() !== "") {
+                document.getElementById("loadingSpinner").style.display = "none";
+                document.getElementById("translatedTextContainer").style.display = "block";
+            }
+        };
+    </script>
 </body>
 </html>
