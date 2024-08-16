@@ -87,6 +87,8 @@ public class ApiClient {
 
         headers.setBearerAuth(cfg.getIamToken());
         headers.set("Content-Type", "application/json");
+        // headers.set("Content-Type", "application/x-www-form-urlencoded");
+        // headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         log.debug("Config content: {}", cfg.toString());
 
