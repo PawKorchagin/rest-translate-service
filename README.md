@@ -23,17 +23,11 @@ Result:
 
 ## Recent commits
 
-* 267e1b0 (HEAD -> main, origin/main, origin/HEAD) edit Dockerfile and compose.yml
-* a57bd00 fix
-* b56d3fb Create README.md
-* 170671a add repository
-* 922d874 add repository
-* 5674c86 add repository config
-* 659e2fd solve client api problem
-* b5aec88 full project view
-* 819fbb6 add gitignore
-* ec6b7f6 add Dockerfile
-* 02eabce (translate-issue) add translate service via yandex translate api
-* 58502bb add echo controller
-* e9c38ed add echo controller
-* 06a8629 Initial commit
+* 279f3af (HEAD -> main, origin/main, origin/HEAD) edit gitignore
+* 039ab04 (dev-pretty) add css, js to translate.html, add run mvn clean package before java -jar ... in Dockerfile
+* 70e0609 add pretty output format
+* f29011e rename message painter
+* c88724c minor changes
+* 6f1cad6 (front-end-dev) add Postmapping translate from html form
+* b77f248 add get request from form
+* c710239 add index.html and translate.html
