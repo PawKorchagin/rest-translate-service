@@ -34,4 +34,4 @@ build/
 *.properties
 logs
 output.txt
-src/main/resources/application.properties
+target
