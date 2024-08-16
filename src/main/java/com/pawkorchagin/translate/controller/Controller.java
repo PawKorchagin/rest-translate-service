@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.pawkorchagin.translate.model.request.YandexApiRequest;
 import com.pawkorchagin.translate.service.IService;
@@ -29,6 +30,12 @@ public class Controller {
     @Autowired
     private IService service;
 
+    /**
+     * Displays the translation form to the user. 
+     * This method serves the initial page where users can input text for translation.
+     *
+     * @return the name of the Thymeleaf template to render the translation form
+     */
     @GetMapping("/translate")
     public String showTranslateForm() {
         return "translate";
@@ -36,7 +43,7 @@ public class Controller {
 
     /**
      * Endpoint to translate text. This method receives a translation request, logs 
-     * the client's IP address, and forwards the request to the service layer.
+     * the client's IP address, and forwards the request to the service layer for processing.
      *
      * @param request        the translation request containing the text and languages
      * @param servletRequest the HTTP servlet request, used to extract the client's IP address
@@ -51,18 +58,34 @@ public class Controller {
         return service.doJob(request, ip);
     }
 
+    /**
+     * Handles form submission for translating text via the web interface. 
+     * This method builds a {@link YandexApiRequest} object from the form inputs,
+     * calls the translation service, and adds the translated text to the model.
+     *
+     * @param text          the text to be translated
+     * @param sourceLang    the source language code (e.g., "en" for English)
+     * @param targetLang    the target language code (e.g., "ru" for Russian)
+     * @param model         the {@link Model} object to pass data to the view
+     * @param servletRequest the HTTP servlet request, used to extract the client's IP address
+     * @return the name of the Thymeleaf template to render the translation result
+     */
     @PostMapping("/translate")
     public String translate(
-        @RequestBody YandexApiRequest request, 
-        Model model,
-        HttpServletRequest servletRequest) {
-        var ip = servletRequest.getRemoteAddr();
-        log.debug("ip: {}", ip);
-        var response = service.doJob(request, ip);
-        if (response.getBody() != null) {
-            model.addAttribute("message", response.getBody());
-        }
+            @RequestParam("text") String text,
+            @RequestParam("sourceLang") String sourceLang,
+            @RequestParam("targetLang") String targetLang,
+            Model model, 
+            HttpServletRequest servletRequest) {
+        
+        // Create a YandexApiRequest object with the form data
+        YandexApiRequest request = new YandexApiRequest(new String[]{ text }, sourceLang, targetLang);
 
+        // Call the translation service and get the response body
+        var body = service.doJob(request, servletRequest.getRemoteAddr()).getBody();
+        
+        // Add the translated text to the model for rendering in the view
+        model.addAttribute("translatedText", body != null ? body : "Failed");
         return "translate";
     }
 
