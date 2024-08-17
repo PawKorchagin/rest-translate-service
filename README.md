@@ -25,7 +25,7 @@ Or manually create config.json file in repository root and add:
 }
 ```
 
-### Use docker-compose
+### Use docker-compose to up localhost
 
 Simply run command:
 
