@@ -2,6 +2,7 @@ FROM python:3.13.0rc1-bookworm AS iam-fetcher
 WORKDIR /app
 
 COPY fetch_iam_token.py /app/
+COPY config.json /app/
 RUN pip install requests
 
 CMD ["python", "fetch_iam_token.py"]
