@@ -1,6 +1,6 @@
 services:
   translate-backend:
-    image: client:0.0.1
+    # image: client:0.0.1
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,7 +12,7 @@ services:
       - SERVER_PORT=8080
     
   db:
-    image: postgres
+    image: postgres:latest
     container_name: db
     environment:
       - POSTGRES_USER=admin
