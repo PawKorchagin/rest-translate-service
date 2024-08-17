@@ -10,6 +10,7 @@ services:
       - "8080:8080"
     environment:
       - SERVER_PORT=8080
+      - YANDEX_IAM_TOKEN = ${YANDEX_IAM_TOKEN}
     
   db:
     image: postgres:latest
