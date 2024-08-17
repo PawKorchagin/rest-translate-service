@@ -31,7 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-*.properties
 logs
 output.txt
 target
+config.json

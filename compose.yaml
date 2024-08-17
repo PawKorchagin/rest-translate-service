@@ -1,19 +1,41 @@
 services:
-  translate-backend:
-    # image: client:0.0.1
+  iam-fetcher:
     build:
       context: .
       dockerfile: Dockerfile
+      target: iam-fetcher
+    volumes:
+      - iam_token:/app/iam_token
+    command: >
+      /bin/sh -c 'python /app/fetch_iam_token.py'
+
+  translate-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: final
     depends_on:
-      - db
+      - iam-fetcher
+    volumes:
+      - iam_token:/app/iam_token
     ports:
       - "8080:8080"
+
+  tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tester
+    depends_on:
+      - iam-fetcher
+      - db
     environment:
-      - SERVER_PORT=8080
-      - YANDEX_IAM_TOKEN = ${YANDEX_IAM_TOKEN}
-    
+      - YANDEX_IAM_TOKEN=${YANDEX_IAM_TOKEN}
+    volumes:
+      - iam_token:/app/iam_token
+
   db:
-    image: postgres:latest
+    image: postgres
     container_name: db
     environment:
       - POSTGRES_USER=admin
@@ -23,3 +45,6 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  iam_token:
