@@ -47,7 +47,9 @@ Result:
 {translations=[{text=text}, {text=amogus}]}
 ```
 
-**Or follow by [link](http://localhost:8080)**.
+**Or follow by [link](http://localhost:8080):**
+
+![](example.png)
 
 ## Progress
 
